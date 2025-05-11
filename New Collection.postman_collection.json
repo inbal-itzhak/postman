@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "4bb082b9-ed17-4889-ade0-f827e8e5d46c",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32868550"
+	},
+	"item": [
+		{
+			"name": "Get stock type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Test Get Stock Type call, asset_class=${pm.iterationData.get(`asset_class`)},locale= ${pm.iterationData.get(`locale`)} \", () => {",
+							"    const jsonData = pm.response.json();",
+							"    const results = jsonData.results;",
+							"    const resultsCount = jsonData.count;",
+							"    const remaining = pm.response.headers.get(\"X-RateLimit-Remaining\");",
+							"    console.log(\"Remaining calls: \"+ remaining);",
+							"   ",
+							"    pm.test(\"Verify results is an array or null\", () => {",
+							"    pm.expect(Array.isArray(results)).to.be.true;",
+							"});",
+							"    if(resultsCount > 0){",
+							"        pm.test(\"if results is an array,verify it gets the requested data\", () => {",
+							"        for (let i=0; i<results.length; i++){",
+							"        pm.expect(results[i].locale).to.eql(pm.iterationData.get(`locale`));",
+							"        pm.expect(results[i].asset_class).to.eql(pm.iterationData.get(`asset_class`));",
+							"        console.log(results[i].asset_class);",
+							"        ",
+							"            }",
+							"        });",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"/*\r",
+							" const delay =(ms) => new Promise(resolve => setTimeout(resolve,ms));\r",
+							" async function runWithDelay(){\r",
+							"    await delay(3000);\r",
+							" }\r",
+							"\r",
+							" runWithDelay();\r",
+							" */"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/v3/reference/tickers/types?asset_class={{asset_class}}&locale={{locale}}&apiKey={{apiKey}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"v3",
+						"reference",
+						"tickers",
+						"types"
+					],
+					"query": [
+						{
+							"key": "asset_class",
+							"value": "{{asset_class}}"
+						},
+						{
+							"key": "locale",
+							"value": "{{locale}}"
+						},
+						{
+							"key": "apiKey",
+							"value": "{{apiKey}}"
+						}
+					]
+				},
+				"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+			},
+			"response": []
+		}
+	]
+}
